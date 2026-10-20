@@ -1,28 +1,45 @@
-import pandas as pd
-import numpy as np
+# Data Card: Proiect MEDE - CP1
+**Autor:** Popa Cătălina-Florentina (U3)  
+**Tema:** Impactul secetei agricole din anul 2022 asupra culturilor (Studiu de caz pe 41 de județe din România)  
+**Perioada analizată:** 2018 – 2022 (5 ani)  
+**Unitatea de analiză:** Județ × An (41 județe × 5 ani = 205 unități observaționale)
 
-# 1. Definirea unității de analiză: 41 de județe x 5 ani
-judete = ['AB', 'AR', 'AG', 'BC', 'BH', 'BN', 'BT', 'BV', 'BR', 'BZ', 'CS', 'CL', 'CJ', 'CT', 'CV', 'DB', 'DJ', 'GL', 'GR', 'GJ', 'HR', 'HD', 'IL', 'IS', 'IF', 'MM', 'MH', 'MS', 'NT', 'OT', 'PH', 'SM', 'SJ', 'SB', 'SV', 'TR', 'TM', 'TL', 'VS', 'VL', 'VN']
-ani = [2018, 2019, 2020, 2021, 2022]
+---
 
-# Crearea tuturor combinațiilor posibile (Județ - An)
-index_multiplu = pd.MultiIndex.from_product([judete, ani], names=['Judet', 'An'])
-matrice_X = pd.DataFrame(index=index_multiplu).reset_index()
+## 1. Sursa 1: INS Tempo (Randament Agricol)
+* **Proveniență:** Institutul Național de Statistică (INS) – Baza de date TEMPO online.
+* **Perioada acoperită:** 2018 – 2022.
+* **Rezoluție spațială / temporală:** Nivel județean (41 județe) / Agregare anuală.
+* **Variabilă extrasă:** Randamentul culturilor agricole (producția de porumb / hectar).
+* **Unități de măsură:** kg/ha sau tone/ha.
+* **Goluri & Calitate:** 194 valori valide din 205 (Aproximativ 94.6% acoperire).
+* **Licență / Acces:** Open Data / Uz academic.
 
-# 2. Simularea aducerii datelor (Aici vor veni datele reale din surse)
-# Randamentul agricol din INS Tempo (kg/ha)
-matrice_X['INS_Randament_Porumb'] = np.nan 
+---
 
-# Anomalia NDVI din GEE MODIS
-matrice_X['MODIS_NDVI_mean'] = np.nan 
+## 2. Sursa 2: GEE MODIS NDVI (Indicele de Vegetație)
+* **Proveniență:** Google Earth Engine / Colecția MODIS (MOD13Q1).
+* **Perioada acoperită:** 2018 – 2022 (sezonul estiv).
+* **Rezoluție spațială / temporală:** 250 metri / Compozit la 16 zile, mediat la nivel de județ.
+* **Variabilă extrasă:** `MODIS_NDVI_mean` (Media indicelui de vegetație).
+* **Unități de măsură:** Adimensional (valori între 0.0 și 1.0).
+* **Goluri & Calitate:** 204 valori valide din 205 (99.5% acoperire).
+* **Licență / Access:** NASA LP DAAC – Open Data prin GEE.
 
-# Indicele SPEI din Copernicus ERA5-Land
-matrice_X['ERA5_SPEI_3'] = np.nan 
+---
 
-# 3. Afișarea primelor rânduri și a dimensiunii (n x d)
-print(f"Dimensiunea Matricei X: {matrice_X.shape[0]} eșantioane x {matrice_X.shape[1]} trăsături")
-print("-" * 50)
-print(matrice_X.head(10))
+## 3. Sursa 3: ERA5-Land (Parametri Climatici / SPEI)
+* **Proveniență:** Copernicus Climate Change Service (C3S) / ERA5-Land prin GEE.
+* **Perioada acoperită:** 2018 – 2022.
+* **Rezoluție spațială / temporală:** ~9 km / Pas lunar și sezonier.
+* **Variabilă extrasă:** `ERA5_Temp_Vara` / indici hidrologici de secetă.
+* **Unități de măsură:** Grade Celsius (°C) / Adimensional.
+* **Goluri & Calitate:** 197 valori valide din 205 (96.1% acoperire).
+* **Licență / Access:** Copernicus / ECMWF – Open Data.
 
-# Export opțional pentru verificare
-# matrice_X.to_csv('matrice_X_U3.csv', index=False)
+---
+
+## 4. Sinteza Matricei de Aliniere (Matricea X)
+* **Dimensiune totală:** 205 rânduri (41 județe × 5 ani) × 5 coloane principale.
+* **Observații complete pentru model:** 185 rânduri complet curate.
+* **Rată de acoperire globală:** 90.2%, validată prin scriptul Python din repository (`CP1_Matrice_X.ipynb`).
